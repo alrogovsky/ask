@@ -1,0 +1,47 @@
+root@vm93266:/# ab -kc 10 -t 60 localhost:8081/helloworld/?a=4
+This is ApacheBench, Version 2.3 <$Revision: 1528965 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 5000 requests
+Completed 10000 requests
+Completed 15000 requests
+Completed 20000 requests
+
+Server Software:        gunicorn/17.5
+Server Hostname:        localhost
+Server Port:            8081
+
+Document Path:          /helloworld/?a=4
+Document Length:        65 bytes
+
+Concurrency Level:      10
+Time taken for tests:   51.311 seconds
+Complete requests:      23498
+Failed requests:        0
+Keep-Alive requests:    0
+Total transferred:      5452631 bytes
+HTML transferred:       1527630 bytes
+Requests per second:    457.95 [#/sec] (mean)
+Time per request:       21.837 [ms] (mean)
+Time per request:       2.184 [ms] (mean, across all concurrent requests)
+Transfer rate:          103.77 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   8.0      0     196
+Processing:     1   21  39.0      2    1006
+Waiting:        0   19  37.6      2    1006
+Total:          1   22  39.6      2    1012
+
+Percentage of the requests served within a certain time (ms)
+  50%      2
+  66%      3
+  75%      5
+  80%     85
+  90%     91
+  95%     93
+  98%     97
+  99%    100
+ 100%   1012 (longest request)

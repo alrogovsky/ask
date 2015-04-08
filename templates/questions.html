@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block main %}
+{% for i in users %}
+<div class="row">
+  <div class="panel panel-default panel-body question">
+  	<div class="question__left col-md-2 col-sm-3 hidden-xs">
+  		<div class="row">
+  			<img class="center-block" src="http://lorempixel.com/83/83/">
+  		</div>
+  		<div class="row text-center rating">
+  			<div class="btn-group">
+          <button class="btn btn-danger btn-sm">-</button>
+			    <button class="btn btn-default btn-sm disabled">2</button>
+          <button class="btn btn-success btn-sm">+</button>
+			</div>
+  		</div>
+  	</div>
+
+  	<div class="question__right col-md-10 col-sm-9">
+  		<h3><a href="/question/12">How to design bro???</a></h3>
+	  	<div class="row question__descr">
+	  		IT IS A DESCRIPTION IT IS A DESCRIPTION IT IS A DESCRIPTION IT IS A DESCRIPTION 
+	  	</div>
+	  	<div class="row question__footer">
+        <span class="hidden-lg bottomleft"><a href="/question/12">answer (2)</a></span>
+        <span class="hidden-lg bottomright">tags:
+          <a href="#">AskRogovsky</a>, 
+          <a href="#">python</a>
+        </span>
+        <span class="visible-lg lg__tryhard__left hidden-xs"><a href="/question/12">answer (2)</a></span>
+        <span class="visible-lg lg__tryhard__right hidden-xs">tags:
+          <a href="#">AskRogovsky</a>, 
+          <a href="#">python</a>
+        </span>
+	  	</div>
+  	</div>
+  </div>
+</div>
+{% endfor %}
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-2 hidden-xs">
+    <ul class="pagination pull-right">
+      <li class="disabled"><a href="#">&laquo;</a></li>
+      <li class="active"><a href="#">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">4</a></li>
+      <li><a href="#">5</a></li>
+      <li><a href="#">&raquo;</a></li>
+    </ul>
+  </div>
+  <div class="col-xs-12 visible-xs">
+    <ul class="pager">
+      <li class="previous pull-left disabled"><a href="#">&larr; Previous</a></li>
+      <li class="next pull-right"><a href="#">Next &rarr;</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

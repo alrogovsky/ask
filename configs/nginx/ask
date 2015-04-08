@@ -1,0 +1,32 @@
+upstream backend {
+	server 127.0.0.1:8081	weight=5;
+}
+
+proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=cache:30m max_size=100M;
+proxy_ignore_headers Expires Cache-Control;
+
+server {
+        listen 80 default_server;
+        server_name  localhost;
+
+	location / {
+		proxy_pass http://backend;
+		
+		proxy_set_header Host $host;      
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; 
+
+		proxy_cache cache;
+		proxy_cache_valid 10m;
+		proxy_cache_valid 404 1m;
+	}
+
+	location ^~ /uploads/ {
+		root /home/www/ask_rogovsky;
+		expires 24h;
+	}
+
+	location ~ \.(jpeg|jpg|gif|png|css|js|txt|html|htm|woff|ttf)$ {
+		root /home/www/ask_rogovsky/static;
+		expires 24h;
+	}
+}

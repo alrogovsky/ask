@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div class="container">
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-6">
+      <form class="form-horizontal">
+      <fieldset>
+
+      <!-- Form Name -->
+      <h2>Ask a questuon</h2>
+      <hr class="colorgraph">
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="title">Title</label>  
+        <div class="col-md-9">
+        <input id="title" name="title" type="text" placeholder="Specify..." class="form-control input-md" required="">
+          
+        </div>
+      </div>
+
+      <!-- Textarea -->
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="description">Description</label>
+        <div class="col-md-9">                     
+          <textarea class="form-control non-resizable" id="description" name="description">Describe your problem...</textarea>
+        </div>
+      </div>
+
+      <!-- Text input-->
+      <div class="form-group">
+        <label class="col-md-3 control-label" for="tags">Tags</label>  
+        <div class="col-md-9">
+        <input id="tags" name="tags" type="text" placeholder="Separate by comma" class="form-control input-md" required="">
+          
+        </div>
+      </div>
+
+      <!-- Button -->
+      <div class="form-group">
+        <div class="col-md-9 col-md-offset-3">
+          <button id="sub_button" name="sub_button" class="btn btn-primary btn-block">Submit</button>
+        </div>
+      </div>
+
+      </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

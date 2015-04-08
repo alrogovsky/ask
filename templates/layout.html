@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <script type="text/javascript" src="/js/jquery-2.1.3.js"></script>
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">AskRogovsky</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav hidden-xs">
+        <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <li>
+          <button type="submit" class="btn btn-success navbar-btn" onclick="window.location.href = '/ask';">Ask!</button>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">Sign Up</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+<div class="container visible-xs hidden-sm hidden-md">
+  <form class="">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search...">
+      <div class="input-group-btn">
+        <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+      </div>
+    </div>
+  </form>
+</div>
+  <!-- start main -->
+  <div class="container">
+    <div class="col-md-8 col-sm-8" id="main">
+      {% block main %} {% endblock %}
+    </div>
+    <div class="col-md-3 col-sm-3 col-md-offset-1 col-sm-offset-1" id="right__column">
+      <h2>Popular tags</h2>
+      <div class="best">
+        <h3>
+          <span class="label label-default">Django</span>
+          <span class="label label-primary">Python</span>
+          <span class="label label-success">MySQL</span>
+          <span class="label label-info">AskRogovsky</span>
+          <span class="label label-warning">gunicorn</span>
+          <span class="label label-danger">nginx</span>
+        </h3>
+      </div>
+        <h2>Best members</h2>
+        <div class="best">
+          <ul class="list-unstyled">
+            <li><a href="#">Vasya</a></li>
+            <li><a href="#">Vova</a></li>
+            <li><a href="#">Petya</a></li>
+            <li><a href="#">admin</a></li>
+          </ul>
+        </div>
+    </div>
+  </div>
+  <!-- end main -->
+</body>
+</html>
