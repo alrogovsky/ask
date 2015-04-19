@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from ask.models import Profile, Question, Answer, Tag, Rate
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.contrib.auth import logout
@@ -26,26 +27,23 @@ def helloworld(request):
 	html = "<html><body>%s</body></html>" % output
 	return HttpResponse(html)
 
+
 def login(request):
 	return render(request, 'login.html')
 
-def questions(request):
-	users = [
-	{
-		"name": "Vasya",
-	},
-	{
-		"name": "admin",
-	}
 
-	]
-	return render(request, 'questions.html', {"users": users})
+def questions(request):
+    questions = Question.objects.all()
+    return render(request, 'questions.html', {'questions':questions})
+
 
 def signup(request):
 	return render(request, 'signup.html')
 
+
 def question(request, id=0):
 	return render(request, 'question.html')
+
 
 def ask(request):
 	return render(request, 'ask.html')

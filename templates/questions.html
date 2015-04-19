@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
-{% for i in users %}
+{% for i in questions %}
 <div class="row">
   <div class="panel panel-default panel-body question">
   	<div class="question__left col-md-2 col-sm-3 hidden-xs">
@@ -11,16 +11,16 @@
   		<div class="row text-center rating">
   			<div class="btn-group">
           <button class="btn btn-danger btn-sm">-</button>
-			    <button class="btn btn-default btn-sm disabled">2</button>
+			    <button class="btn btn-default btn-sm disabled">{{ i.rating }}</button>
           <button class="btn btn-success btn-sm">+</button>
 			</div>
   		</div>
   	</div>
 
   	<div class="question__right col-md-10 col-sm-9">
-  		<h3><a href="/question/12">How to design bro???</a></h3>
+  		<h3><a href="{% url 'question' i.id %}">{{ i.title }}</a></h3>
 	  	<div class="row question__descr">
-	  		IT IS A DESCRIPTION IT IS A DESCRIPTION IT IS A DESCRIPTION IT IS A DESCRIPTION 
+            {{ i.text }}
 	  	</div>
 	  	<div class="row question__footer">
         <span class="hidden-lg bottomleft"><a href="/question/12">answer (2)</a></span>
@@ -28,7 +28,7 @@
           <a href="#">AskRogovsky</a>, 
           <a href="#">python</a>
         </span>
-        <span class="visible-lg lg__tryhard__left hidden-xs"><a href="/question/12">answer (2)</a></span>
+        <span class="visible-lg lg__tryhard__left hidden-xs"><a href="{% url 'question' i.id %}">  answer (2)</a></span>
         <span class="visible-lg lg__tryhard__right hidden-xs">tags:
           <a href="#">AskRogovsky</a>, 
           <a href="#">python</a>
