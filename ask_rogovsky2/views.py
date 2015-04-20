@@ -33,7 +33,7 @@ def login(request):
 
 
 def questions(request):
-    questions = Question.objects.all()
+    questions = Question.objects.all().order_by('-date_added')
     return render(request, 'questions.html', {'questions':questions})
 
 
@@ -42,7 +42,13 @@ def signup(request):
 
 
 def question(request, id=0):
-	return render(request, 'question.html')
+    q_id = int(id)
+    try:
+        question = Question.objects.get(id = q_id)
+    except Question.DoesNotExist:
+        raise Http404
+    answers = Answer.objects.filter(question_id=q_id).order_by('-date_added')
+    return render(request, 'question.html', {'question':question, 'answers':answers})
 
 
 def ask(request):
