@@ -4,7 +4,6 @@
     <data-source name="Django default" uuid="7d846d89-3d2f-41cf-b628-1d1a4e3c9391">
       <first-sync>true</first-sync>
       <user-name>root</user-name>
-      <user-password>df9bdf98df99df9edf9f</user-password>
     </data-source>
   </component>
 </project>

@@ -21,6 +21,10 @@ h3 {
   margin-bottom: 20px;
 }
 
+.fuck{
+    height: 20px;
+}
+
 #login__container {
 	padding: 10px;
 	border-sizing: border-box;
@@ -32,7 +36,6 @@ h3 {
 
 .question__left {
   padding-left: 0px;
-  border-right: 1px solid #eee;
 }
 
 .question__panel{
@@ -40,6 +43,7 @@ h3 {
 }
 
 .question__right {
+    border-left: 1px solid #eee;
 }
 
 .rating {
@@ -77,17 +81,6 @@ h3 {
   padding-left: 30px;
   padding-bottom: 10px;
   padding-right: 30px;
-}
-
-.lg__tryhard__right {
-  position: absolute;
-  right: 30px;
-  top: 95px;
-}
-
-.lg__tryhard__left {
-  position: absolute;
-  top: 95px;
 }
 
 /* ANSWERS */

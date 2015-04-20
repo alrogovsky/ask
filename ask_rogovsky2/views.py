@@ -34,6 +34,8 @@ def login(request):
 
 def questions(request):
     questions = Question.objects.all().order_by('-date_added')
+    for q in questions:
+        q.answers = Answer.objects.filter(question_id = q.id).count()
     return render(request, 'questions.html', {'questions':questions})
 
 
