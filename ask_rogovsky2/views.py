@@ -29,15 +29,51 @@ def login(request):
 
 
 def questions(request, order = ''):
+    if order != 'best':
+        order = 'new'
+
     if order == 'best':
         questions = Question.objects.all().order_by('-rating')
-    elif order == 'new' or order == '':
-        order = 'new'
-        questions = Question.objects.all().order_by('-date_added')
     else:
+        questions = Question.objects.order_by('-date_added')
+
+    if request.GET.get('p'):
+        pageNumber = int(request.GET.get('p'))
+    else:
+        pageNumber = 1
+
+    p = Paginator(questions, 10)
+    lastPage = p.num_pages
+
+    if lastPage < pageNumber or pageNumber < 1:
         raise Http404
-    questions = getQuestionParams(questions)
-    return render(request, 'questions.html', {'questions': questions, 'best_tags': getBestTags(),'order':order})
+    page = p.page(pageNumber)
+
+    if pageNumber < 3:
+        pagesStart = 1
+    else:
+        pagesStart = pageNumber - 2
+
+    if (pagesStart + 5) > lastPage:
+        pagesEnd = lastPage
+        pagesStart = pagesEnd - 5
+        if pagesStart < 1:
+            pagesStart = 1
+    else:
+        pagesEnd = pagesStart + 5
+
+    pagesRange = range(pagesStart, pagesEnd+1)
+
+    questions = getQuestionParams(page.object_list)
+
+    return render(request, 'questions.html',{
+        'questions': questions,
+        'best_tags': getBestTags(),
+        'order':order,
+        'pagesRange': pagesRange,
+        'lastPage': lastPage,
+        'currentPage': pageNumber
+    })
 
 
 def bytag(request, tag=''):

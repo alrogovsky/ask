@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 hidden-xs">
+    <ul class="pagination">
+        <li class="{% if currentPage == 1 %}disabled{% endif %}"><a {% if currentPage != 1 %}href="?p={{ currentPage|add:"-1" }}" {% endif %}>&laquo;</a></li>
+        {% for i in pagesRange %}
+        <li class="{% if i == currentPage %}active{% endif %}"><a href="?p={{ i }}">{{ i }} {% if i == currentPage %}<span class="sr-only">(current)</span>{% endif %}</a></li>
+        {% endfor %}
+        <li class="{% if currentPage == lastPage %}disabled{% endif %}"><a {% if currentPage != lastPage %}href="?p={{ currentPage|add:"+1" }}"{% endif %}>&raquo;</a></li>
+    </ul>
+  </div>
+  <div class="col-xs-12 visible-xs">
+    <ul class="pager">
+    {% if currentPage == 1 %}
+      <li class="previous pull-left disabled">
+         <a>&larr; Previous</a>
+      </li>
+    {% else %}
+      <li class="previous pull-left">
+         <a href="?p={{ currentPage|add:"-1" }}">&larr; Previous</a>
+      </li>
+    {% endif %}
+    {% if currentPage == lastPage %}
+      <li class="next pull-right disabled">
+         <a>Next &rarr;</a>
+      </li>
+    {% else %}
+      <li class="next pull-right">
+         <a href="?p={{ currentPage|add:"+1" }}">Next &rarr;</a>
+      </li>
+    {% endif %}
+    </ul>
+  </div>
+</div>

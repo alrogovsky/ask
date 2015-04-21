@@ -8,7 +8,7 @@
     {% endif %}
     {% if order %}
         <div class="row">
-            <div class="col-md-4 col-md-offset-4 order__btn">
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 order__btn">
                 <div class="btn-group btn-group-justified" role="group" aria-label="Order by">
                       <a href="{% url 'questions' 'new' %}" class="btn btn-default {% if order == 'new' %} active {% endif %}" role="button">New</a>
                       <a href="{% url 'questions' 'best' %}" class="btn btn-default {% if order == 'best' %} active {% endif %}" role="button">Best</a>
@@ -78,23 +78,6 @@
 </div>
 {% endfor %}
 
-<div class="row">
-  <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-2 hidden-xs">
-    <ul class="pagination pull-right">
-      <li class="disabled"><a href="#">&laquo;</a></li>
-      <li class="active"><a href="#">1</a></li>
-      <li><a href="#">2</a></li>
-      <li><a href="#">3</a></li>
-      <li><a href="#">4</a></li>
-      <li><a href="#">5</a></li>
-      <li><a href="#">&raquo;</a></li>
-    </ul>
-  </div>
-  <div class="col-xs-12 visible-xs">
-    <ul class="pager">
-      <li class="previous pull-left disabled"><a href="#">&larr; Previous</a></li>
-      <li class="next pull-right"><a href="#">Next &rarr;</a></li>
-    </ul>
-  </div>
-</div>
+{% include "paginator.html" %}
+
 {% endblock %}
