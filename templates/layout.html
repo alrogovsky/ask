@@ -58,7 +58,7 @@
       <div class="best">
         <h3>
             {% for t in best_tags %}
-          <a href="{% url 'tag' t.word %}" class="taglink"><span class="label label-default">{{ t.word }}</span></a>
+          <a href="{% url 'tag' t.word %}" class="taglink"><span class="label {{ t.color }}">{{ t.word }}</span></a>
             {% endfor %}
         </h3>
       </div>

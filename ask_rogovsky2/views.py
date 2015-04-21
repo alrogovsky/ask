@@ -54,37 +54,16 @@ def questions(request, order = ''):
     if pageNumber < 1:
         pageNumber = 1
 
-    p = Paginator(questions, 10)
-    lastPage = p.num_pages
+    paginator = makePages(pageNumber, questions)
 
-    if pageNumber > lastPage:
-        pageNumber = lastPage
-
-    page = p.page(pageNumber)
-
-    if pageNumber < 3:
-        pagesStart = 1
-    else:
-        pagesStart = pageNumber - 2
-
-    if (pagesStart + 5) > lastPage:
-        pagesEnd = lastPage
-        pagesStart = pagesEnd - 5
-        if pagesStart < 1:
-            pagesStart = 1
-    else:
-        pagesEnd = pagesStart + 5
-
-    pagesRange = range(pagesStart, pagesEnd+1)
-
-    questions = getQuestionParams(page.object_list)
+    questions = getQuestionParams(paginator['page'].object_list)
 
     return render(request, 'questions.html',{
         'questions': questions,
         'best_tags': getBestTags(),
         'order':order,
-        'pagesRange': pagesRange,
-        'lastPage': lastPage,
+        'pagesRange': paginator['pagesRange'],
+        'lastPage': paginator['lastPage'],
         'currentPage': pageNumber
     })
 
@@ -92,8 +71,27 @@ def questions(request, order = ''):
 def bytag(request, tag=''):
     t = Tag.objects.get(word=tag)
     questions = t.question_set.all().order_by('-date_added')
-    questions = getQuestionParams(questions)
-    return render(request, 'questions.html', {'questions': questions, 'best_tags': getBestTags(), 'tag': tag})
+
+    pageNumber = 0
+
+    if request.GET.get('p'):
+        pageNumber = int(request.GET.get('p'))
+
+    if pageNumber < 1:
+        pageNumber = 1
+
+    paginator = makePages(pageNumber, questions)
+
+    questions = getQuestionParams(paginator['page'].object_list)
+
+    return render(request, 'questions.html', {
+        'questions': questions,
+        'best_tags': getBestTags(),
+        'tag': tag,
+        'pagesRange': paginator['pagesRange'],
+        'lastPage': paginator['lastPage'],
+        'currentPage': pageNumber
+    })
 
 
 def signup(request):
@@ -126,7 +124,38 @@ def getQuestionParams(questions):
 
 def getBestTags():
     tags = Tag.objects.all()
+    i=1
+    colors = {1:'label-primary', 2:'label-success', 3:'label-info', 4:'label-warning', 5:'label-danger'}
     for t in tags:
         t.quantity = t.question_set.all().count()
-    newlist = sorted(tags, key=lambda x: x.quantity, reverse=True)
-    return newlist[:5]
+        t.color = colors[i]
+        i += 1
+    tags = sorted(tags, key=lambda x: x.quantity, reverse=True)
+    return tags[:5]
+
+
+def makePages(pageNumber, questions):
+    p = Paginator(questions, 10)
+    lastPage = p.num_pages
+
+    if pageNumber > lastPage:
+        pageNumber = lastPage
+
+    page = p.page(pageNumber)
+
+    if pageNumber < 3:
+        pagesStart = 1
+    else:
+        pagesStart = pageNumber - 2
+
+    if (pagesStart + 5) > lastPage:
+        pagesEnd = lastPage
+        pagesStart = pagesEnd - 5
+        if pagesStart < 1:
+            pagesStart = 1
+    else:
+        pagesEnd = pagesStart + 5
+
+    pagesRange = range(pagesStart, pagesEnd+1)
+
+    return {'lastPage': lastPage, 'pagesRange': pagesRange, 'page': page}
