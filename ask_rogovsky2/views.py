@@ -21,6 +21,16 @@ def helloworld(request):
             output += x + '='
             output += request.POST[x] + ' '
     html = "<html><body>%s</body></html>" % output
+
+    if request.GET.get('persist') == 1:
+        u = User.objects.get(pk = 1)
+        t = Tag.objects.all()
+        for x in range (1, 100):
+            q = Question(author = u, title = 'GENERATED FOR TESTS', text = 'THIS IS GENERATED QUESTION!', date_added = "NOW()", rating = 0)
+            q.save()
+            q.tags.add(t[0])
+            q.tags.add(t[1])
+            q.tags.add(t[2])
     return HttpResponse(html)
 
 
@@ -31,22 +41,25 @@ def login(request):
 def questions(request, order = ''):
     if order != 'best':
         order = 'new'
-
     if order == 'best':
         questions = Question.objects.all().order_by('-rating')
     else:
         questions = Question.objects.order_by('-date_added')
 
+    pageNumber = 0
+
     if request.GET.get('p'):
         pageNumber = int(request.GET.get('p'))
-    else:
+
+    if pageNumber < 1:
         pageNumber = 1
 
     p = Paginator(questions, 10)
     lastPage = p.num_pages
 
-    if lastPage < pageNumber or pageNumber < 1:
-        raise Http404
+    if pageNumber > lastPage:
+        pageNumber = lastPage
+
     page = p.page(pageNumber)
 
     if pageNumber < 3:
