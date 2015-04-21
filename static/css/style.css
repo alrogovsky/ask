@@ -21,6 +21,10 @@ h3 {
     text-decoration: none !important;
 }
 
+.order__btn{
+    margin-bottom: 15px;
+}
+
 .best {
   margin-bottom: 20px;
 }

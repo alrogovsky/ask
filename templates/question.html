@@ -24,8 +24,9 @@
             </div>
             <div class="row question__footer" id="question__footer">
                 <span class="pull-left" class="tags">tags:&nbsp</span>
-                    <a href="#">AskRogovsky</a>,
-                    <a href="#">python</a>
+                {% for tag in question.taglist %}
+                    <a href="{% url 'tag' tag.word %}">{{ tag.word }}</a>
+                {% endfor %}
                 <span class="pull-right">Asked by {{ question.author }}</span>
             </div>
         </div>
@@ -54,7 +55,7 @@
             <div class="col-md-10 col-sm-9">
                 <div class="panel answ_panel panel-default">
                     <div class="panel-heading">
-                        <strong>{{ a.author }}</strong> <span class="text-muted">commented on {{ a.date_added }}</span>
+                        <strong>{{ a.author }}</strong> <span class="text-muted">answered on {{ a.date_added }}</span>
                     </div>
                     <div class="panel-body">
                         {{ a.text }}

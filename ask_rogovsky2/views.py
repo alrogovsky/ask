@@ -25,24 +25,30 @@ def helloworld(request):
 
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'login.html',{'best_tags': getBestTags(),})
 
 
-def questions(request):
-    questions = Question.objects.all().order_by('-date_added')
+def questions(request, order = ''):
+    if order == 'best':
+        questions = Question.objects.all().order_by('-rating')
+    elif order == 'new' or order == '':
+        order = 'new'
+        questions = Question.objects.all().order_by('-date_added')
+    else:
+        raise Http404
     questions = getQuestionParams(questions)
-    return render(request, 'questions.html', {'questions': questions, 'best_tags': getBestTags()})
+    return render(request, 'questions.html', {'questions': questions, 'best_tags': getBestTags(),'order':order})
 
 
 def bytag(request, tag=''):
     t = Tag.objects.get(word=tag)
     questions = t.question_set.all().order_by('-date_added')
     questions = getQuestionParams(questions)
-    return render(request, 'questions.html', {'questions': questions, 'tag': tag})
+    return render(request, 'questions.html', {'questions': questions, 'best_tags': getBestTags(), 'tag': tag})
 
 
 def signup(request):
-    return render(request, 'signup.html')
+    return render(request, 'signup.html', {'best_tags': getBestTags(),})
 
 
 def question(request, id=0):
@@ -51,13 +57,14 @@ def question(request, id=0):
         question = Question.objects.get(id=q_id)
     except Question.DoesNotExist:
         raise Http404
+    question.taglist = question.tags.all()
     answers = Answer.objects.filter(question_id=q_id).order_by('-date_added')
-    return render(request, 'question.html', {'question': question, 'answers': answers})
+    return render(request, 'question.html', {'question': question, 'best_tags': getBestTags(), 'answers': answers})
 
 
 def ask(request):
     getBestTags()
-    return render(request, 'ask.html')
+    return render(request, 'ask.html',{'best_tags': getBestTags()})
 
 
 ########### helpers #############
