@@ -22,7 +22,7 @@ def helloworld(request):
             output += request.POST[x] + ' '
     html = "<html><body>%s</body></html>" % output
 
-    if request.GET.get('persist') == 1:
+    if int(request.GET.get('persist')) == 1:
         u = User.objects.get(pk = 1)
         t = Tag.objects.all()
         for x in range (1, 100):
