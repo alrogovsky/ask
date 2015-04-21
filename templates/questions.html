@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 
 {% block main %}
+    {% if tag %}
+        <div class="row">
+            <h2 class="h2__tag text-center">Questions with tag: {{ tag }}</h2>
+        </div>
+    {% endif %}
 {% for i in questions %}
 <div class="row">
   <div class="panel panel-default panel-body question">
@@ -26,13 +31,15 @@
 	  	<div class="row question__footer">
         <span class="hidden-lg bottomleft"><a href="{% url 'question' i.id %}">answer ({{ i.answers }})</a></span>
         <span class="hidden-lg bottomright">tags:
-          <a href="#">AskRogovsky</a>,
-          <a href="#">python</a>
+            {% for t in i.taglist %}
+            <a href="{% url 'tag' t.word %}">{{ t.word }}</a>
+            {% endfor %}
         </span>
         <span class="visible-lg hidden-xs bottomleft"><a href="{% url 'question' i.id %}"> answer ({{ i.answers }})</a></span>
         <span class="visible-lg hidden-xs bottomright">tags:
-          <a href="#">AskRogovsky</a>,
-          <a href="#">python</a>
+            {% for t in i.taglist %}
+            <a href="{% url 'tag' t.word %}">{{ t.word }}</a>
+            {% endfor %}
         </span>
 	  	</div>
   	</div>
@@ -45,13 +52,15 @@
         <div class="row question__footer">
             <span class="hidden-lg bottomleft"><a href="{% url 'question' i.id %}">answer ({{ i.answers }})</a></span>
             <span class="hidden-lg bottomright">tags:
-              <a href="#">AskRogovsky</a>,
-              <a href="#">python</a>
+                {% for t in i.taglist %}
+              <a href="{% url 'tag' t.word %}">{{ t.word }}</a>
+                {% endfor %}
             </span>
             <span class="visible-lg hidden-xs bottomleft"><a href="{% url 'question' i.id %}">answer ({{ i.answers }})</a></span>
             <span class="visible-lg hidden-xs bottomright">tags:
-              <a href="#">AskRogovsky</a>,
-              <a href="#">python</a>
+                {% for t in i.taglist %}
+              <a href="{% url 'tag' t.word %}">{{ t.word }}</a>
+                {% endfor %}
             </span>
         </div>
   	</div>

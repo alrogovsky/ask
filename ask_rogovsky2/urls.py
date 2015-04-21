@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^signup/$', 'ask_rogovsky2.views.signup', name='signup'),
     url(r'^question/(\d+)$', 'ask_rogovsky2.views.question', name='question'),
     url(r'^ask/$','ask_rogovsky2.views.ask', name='ask'),
+    url(r'^tag/(.+)$', 'ask_rogovsky2.views.bytag', name='tag')
 ]

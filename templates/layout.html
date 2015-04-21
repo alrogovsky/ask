@@ -57,12 +57,9 @@
       <h2>Popular tags</h2>
       <div class="best">
         <h3>
-          <span class="label label-default">Django</span>
-          <span class="label label-primary">Python</span>
-          <span class="label label-success">MySQL</span>
-          <span class="label label-info">AskRogovsky</span>
-          <span class="label label-warning">gunicorn</span>
-          <span class="label label-danger">nginx</span>
+            {% for t in best_tags %}
+          <a href="{% url 'tag' t.word %}" class="taglink"><span class="label label-default">{{ t.word }}</span></a>
+            {% endfor %}
         </h3>
       </div>
         <h2>Best members</h2>
