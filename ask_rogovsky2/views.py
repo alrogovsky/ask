@@ -49,7 +49,10 @@ def questions(request, order = ''):
     pageNumber = 0
 
     if request.GET.get('p'):
-        pageNumber = int(request.GET.get('p'))
+        try:
+            pageNumber = int(request.GET.get('p'))
+        except ValueError:
+            raise Http404
 
     if pageNumber < 1:
         pageNumber = 1
@@ -75,7 +78,10 @@ def bytag(request, tag=''):
     pageNumber = 0
 
     if request.GET.get('p'):
-        pageNumber = int(request.GET.get('p'))
+        try:
+            pageNumber = int(request.GET.get('p'))
+        except ValueError:
+            raise Http404
 
     if pageNumber < 1:
         pageNumber = 1
@@ -105,7 +111,7 @@ def question(request, id=0):
     except Question.DoesNotExist:
         raise Http404
     question.taglist = question.tags.all()
-    answers = Answer.objects.filter(question_id=q_id).order_by('-date_added')
+    answers = Answer.objects.filter(question_id=q_id).order_by('date_added')
     return render(request, 'question.html', {'question': question, 'best_tags': getBestTags(), 'answers': answers})
 
 

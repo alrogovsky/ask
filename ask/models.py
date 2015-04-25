@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User)
     rating = models.IntegerField(default=0)
-    avatar_url = models.CharField(max_length=60)
+    avatar_url = models.ImageField(max_length=60)
 
 
 class Tag(models.Model):
