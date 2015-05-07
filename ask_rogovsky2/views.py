@@ -140,8 +140,6 @@ def signup(request):
         form = SignUp(request.POST, request.FILES)
         if form.is_valid():
             usr = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['pass1'])
-            request.FILES['avatar'].name = usr.username + "/" + request.FILES['avatar'].name
-            print request.FILES['avatar'].name
             prof = Profile.objects.create(rating=0, user_id=usr.id, avatar_url = request.FILES['avatar'])
             return HttpResponseRedirect("/")
     else:
