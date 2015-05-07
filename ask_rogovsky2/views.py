@@ -1,10 +1,15 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
+from django.contrib import auth
 from ask.models import Profile, Question, Answer, Tag, Rate
 from django.core.paginator import Paginator
 from django.http import Http404
+from ask_rogovsky2.forms import SignUp, EditProfile
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+import os
 
 
 @csrf_exempt
@@ -31,11 +36,39 @@ def helloworld(request):
             q.tags.add(t[0])
             q.tags.add(t[1])
             q.tags.add(t[2])
+
     return HttpResponse(html)
 
 
 def login(request):
-    return render(request, 'login.html',{'best_tags': getBestTags(),})
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+
+    redirect = "/"
+    if request.GET.get('next'):
+        redirect = request.GET.get('next')
+
+    if request.POST:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            auth.login(request, user)
+            return HttpResponseRedirect(redirect)
+        else:
+            return render(request, 'login.html', {
+                'best_tags': getBestTags(),
+                'username': username,
+                'password': password,
+                'error': 1,
+                'redirect': redirect
+            })
+    return render(request, 'login.html', {'best_tags': getBestTags(), 'redirect': redirect})
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(request.GET.get('next'))
 
 
 def questions(request, order = ''):
@@ -58,11 +91,10 @@ def questions(request, order = ''):
         pageNumber = 1
 
     paginator = makePages(pageNumber, questions)
-
-    questions = getQuestionParams(paginator['page'].object_list)
+    page_questions = getQuestionParams(paginator['page'].object_list)
 
     return render(request, 'questions.html',{
-        'questions': questions,
+        'questions': page_questions,
         'best_tags': getBestTags(),
         'order':order,
         'pagesRange': paginator['pagesRange'],
@@ -101,7 +133,42 @@ def bytag(request, tag=''):
 
 
 def signup(request):
-    return render(request, 'signup.html', {'best_tags': getBestTags(),})
+    if request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+
+    if request.method == 'POST':
+        form = SignUp(request.POST, request.FILES)
+        if form.is_valid():
+            usr = User.objects.create_user(form.cleaned_data['username'], form.cleaned_data['email'], form.cleaned_data['pass1'])
+            request.FILES['avatar'].name = usr.username + "/" + request.FILES['avatar'].name
+            print request.FILES['avatar'].name
+            prof = Profile.objects.create(rating=0, user_id=usr.id, avatar_url = request.FILES['avatar'])
+            return HttpResponseRedirect("/")
+    else:
+        form = SignUp()
+    return render(request, 'signup.html', {'best_tags': getBestTags(), 'form':form, })
+
+
+@login_required(login_url='/login/')
+def profile_edit(request):
+    form = EditProfile()
+    ava = Profile.objects.get(user=int(request.user.id)).avatar_url
+    if request.method == 'POST':
+        form = EditProfile(request.POST, request.FILES)
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data['name']
+            request.user.last_name = form.cleaned_data['l_name']
+            if form.cleaned_data['email'] != '':
+                request.user.email = form.cleaned_data['email']
+            request.user.save()
+            if request.FILES:
+                prof = Profile.objects.get(user=int(request.user.id))
+                prof.avatar_url = request.FILES['avatar']
+                prof.save()
+            ava = Profile.objects.get(user=int(request.user.id)).avatar_url
+            return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'success':1})
+    else:
+        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava})
 
 
 def question(request, id=0):
@@ -112,7 +179,11 @@ def question(request, id=0):
         raise Http404
     question.taglist = question.tags.all()
     answers = Answer.objects.filter(question_id=q_id).order_by('date_added')
-    return render(request, 'question.html', {'question': question, 'best_tags': getBestTags(), 'answers': answers})
+    return render(request, 'question.html', {
+        'question': question,
+        'best_tags': getBestTags(),
+        'answers': answers,
+    })
 
 
 def ask(request):

@@ -1,14 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
+import os
+from ask_rogovsky2 import settings
 # Create your models here.
 
 # ok, seichas
 
+uploads = "avatars"
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
     rating = models.IntegerField(default=0)
-    avatar_url = models.ImageField(max_length=60)
+    avatar_url = models.ImageField(
+        upload_to = uploads,
+        default = "/no-ava.jpg"
+    )
 
 
 class Tag(models.Model):

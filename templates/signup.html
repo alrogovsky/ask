@@ -1,50 +1,57 @@
 {% extends "layout.html" %}
+{% load widget_tweaks %}
 
 {% block main %}
-<div class="container">
-
-<div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-6">
-    <form role="form">
-      <h2 class="h2__no__margin">Sign Up</h2>
-      <hr class="colorgraph">
-      <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-6">
-          <div class="form-group">
-              <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6">
-          <div class="form-group">
-            <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Nick Name" tabindex="3">
-      </div>
-      <div class="form-group">
-        <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
-      </div>
-      <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-6">
-          <div class="form-group">
-            <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6">
-          <div class="form-group">
-            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12 col-md-12">
-          <input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
-        </div>
-      </div>
-    </form>
+<form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h2 class="form-heading h2__no__margin">Sign Up</h2>
+  <div class="form-group">
+    <label for="inputLogin" class="col-sm-3 control-label">Login</label>
+    <div class="col-sm-9">
+      {% render_field form.username class="form-control" required="required" placeholder="" %}
+      {% for error in form.username.errors %}
+      <span class="label label-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
   </div>
-</div>
-</div>
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
+    <div class="col-sm-9">
+      {% render_field form.email class="form-control" required="required" placeholder="" %}
+      {% for error in form.email.errors %}
+      <span class="label label-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-3 control-label">Password</label>
+    <div class="col-sm-9">
+      {% render_field form.pass1 class="form-control" required="required" placeholder="" %}
+      {% for error in form.pass1.errors %}
+      <span class="label label-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword4" class="col-sm-3 control-label">Confirm password</label>
+    <div class="col-sm-9">
+      {% render_field form.pass2 class="form-control" required="required" placeholder="" %}
+      {% for error in form.pass2.errors %}
+      <span class="label label-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputFile" class="col-sm-3 control-label">Avatar</label>
+    <div class="col-sm-9">
+    {{ form.avatar }}
+    <p class="help-block">not required</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+      <button type="submit" class="btn btn-primary">Sign up!</button>
+    </div>
+  </div>
+</form>
 {% endblock %}

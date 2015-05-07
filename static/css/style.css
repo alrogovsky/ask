@@ -144,6 +144,20 @@ h3 {
 /* END ANSWERS */
 
 
+.navbar-nav>li>a.profile-image {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#user{
+    margin-left: 5px;
+}
+
 .non-resizable {
   resize: vertical;
+}
+
+.img-edit{
+    width: 200px;
+    height:200px;
 }
