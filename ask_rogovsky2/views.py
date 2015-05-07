@@ -164,7 +164,7 @@ def profile_edit(request):
                 prof.avatar_url = request.FILES['avatar']
                 prof.save()
             ava = Profile.objects.get(user=int(request.user.id)).avatar_url
-            return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'success':1})
+        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'success':1})
     else:
         return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava})
 
