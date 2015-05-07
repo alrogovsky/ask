@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 import os
 
 
+
 @csrf_exempt
 def helloworld(request):
     output = '<b>Hello World</b><br />'
@@ -63,7 +64,7 @@ def login(request):
                 'error': 1,
                 'redirect': redirect
             })
-    return render(request, 'login.html', {'best_tags': getBestTags(), 'redirect': redirect})
+    return render(request, 'login.html', {'best_tags': getBestTags(), 'redirect': redirect,})
 
 
 def logout_view(request):
@@ -72,6 +73,7 @@ def logout_view(request):
 
 
 def questions(request, order = ''):
+    userpic = 0
     if order != 'best':
         order = 'new'
     if order == 'best':
@@ -93,17 +95,22 @@ def questions(request, order = ''):
     paginator = makePages(pageNumber, questions)
     page_questions = getQuestionParams(paginator['page'].object_list)
 
+    if request.user.is_authenticated():
+        userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
+
     return render(request, 'questions.html',{
         'questions': page_questions,
         'best_tags': getBestTags(),
         'order':order,
         'pagesRange': paginator['pagesRange'],
         'lastPage': paginator['lastPage'],
-        'currentPage': pageNumber
+        'currentPage': pageNumber,
+        'userpic': userpic,
     })
 
 
 def bytag(request, tag=''):
+    userpic = 0
     t = Tag.objects.get(word=tag)
     questions = t.question_set.all().order_by('-date_added')
 
@@ -122,13 +129,17 @@ def bytag(request, tag=''):
 
     questions = getQuestionParams(paginator['page'].object_list)
 
+    if request.user.is_authenticated():
+        userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
+
     return render(request, 'questions.html', {
         'questions': questions,
         'best_tags': getBestTags(),
         'tag': tag,
         'pagesRange': paginator['pagesRange'],
         'lastPage': paginator['lastPage'],
-        'currentPage': pageNumber
+        'currentPage': pageNumber,
+        'userpic': userpic
     })
 
 
@@ -149,6 +160,7 @@ def signup(request):
 
 @login_required(login_url='/login/')
 def profile_edit(request):
+    userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
     form = EditProfile()
     ava = Profile.objects.get(user=int(request.user.id)).avatar_url
     if request.method == 'POST':
@@ -164,12 +176,15 @@ def profile_edit(request):
                 prof.avatar_url = request.FILES['avatar']
                 prof.save()
             ava = Profile.objects.get(user=int(request.user.id)).avatar_url
-        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'success':1})
+        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'success': 1, 'userpic': userpic})
     else:
-        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava})
+        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'userpic': userpic})
 
 
 def question(request, id=0):
+    userpic = 0
+    if request.user.is_authenticated():
+        userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
     q_id = int(id)
     try:
         question = Question.objects.get(id=q_id)
@@ -181,12 +196,15 @@ def question(request, id=0):
         'question': question,
         'best_tags': getBestTags(),
         'answers': answers,
+        'userpic': userpic,
     })
 
 
 def ask(request):
-    getBestTags()
-    return render(request, 'ask.html',{'best_tags': getBestTags()})
+    userpic = 0
+    if request.user.is_authenticated():
+        userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
+    return render(request, 'ask.html',{'best_tags': getBestTags(), 'userpic': userpic})
 
 
 ########### helpers #############
