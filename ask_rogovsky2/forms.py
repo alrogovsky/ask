@@ -3,6 +3,7 @@ from ask.models import User
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
+from ask.models import Question, Answer
 
 class SignUp(forms.Form):
     username = forms.CharField(label='Username', max_length=30)
@@ -50,3 +51,23 @@ class EditProfile(forms.Form):
             return email
         except ValidationError:
             raise forms.ValidationError('Invalid email')
+
+
+class Ask(ModelForm):
+    tags = forms.CharField(required=False)
+    class Meta:
+        model = Question
+        fields = ['title', 'text']
+
+
+class AnswerForm(ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['text']
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if text == "":
+            raise forms.ValidationError('You can not submit an empty answer!')
+        else:
+            return text

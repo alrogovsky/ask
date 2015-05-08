@@ -1,11 +1,13 @@
 {% extends "layout.html" %}
+{% load widget_tweaks %}
 
 {% block main %}
 
 <div class="container">
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6">
-      <form class="form-horizontal">
+      <form class="form-horizontal" method="POST" target="{% url 'ask' %}">
+          {% csrf_token %}
       <fieldset>
 
       <!-- Form Name -->
@@ -16,7 +18,7 @@
       <div class="form-group">
         <label class="col-md-3 control-label" for="title">Title</label>  
         <div class="col-md-9">
-        <input id="title" name="title" type="text" placeholder="Title" class="form-control input-md" required="">
+            {% render_field form.title class="form-control input-md" required="required" placeholder="" %}
           
         </div>
       </div>
@@ -25,7 +27,7 @@
       <div class="form-group">
         <label class="col-md-3 control-label" for="description">Description</label>
         <div class="col-md-9">                     
-          <textarea class="form-control non-resizable" id="description" name="description" placeholder="Describe your problem..."></textarea>
+            {% render_field form.text class="form-control input-md non-resizable" required="required" placeholder="" %}
         </div>
       </div>
 
@@ -33,7 +35,7 @@
       <div class="form-group">
         <label class="col-md-3 control-label" for="tags">Tags</label>  
         <div class="col-md-9">
-        <input id="tags" name="tags" type="text" placeholder="Separate by comma" class="form-control input-md" required="">
+            {% render_field form.tags class="form-control input-md" required="required" placeholder="" %}
         </div>
       </div>
 

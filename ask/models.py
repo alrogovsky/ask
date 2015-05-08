@@ -36,8 +36,14 @@ class Answer(models.Model):
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
     is_right = models.BooleanField(default=False)
+    rating = models.IntegerField(default=0)
 
 
 class Rate(models.Model):
     user = models.ForeignKey(User)
     question = models.ForeignKey(Question)
+
+
+class Rate_Answer(models.Model):
+    user = models.ForeignKey(User)
+    answer = models.ForeignKey(Answer)

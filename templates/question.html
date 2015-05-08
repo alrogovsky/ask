@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
+{% load widget_tweaks %}
 
 {% block main %}
 <div class="row">
     <div class="col-md-2 col-sm-3 hidden-xs">
         <div class="row">
-            <img class="pull-right" src="http://lorempixel.com/83/83/">
+            <img class="pull-right question_pic" src="/uploads/{{ question.userpic }}">
         </div>
         <div class="row rating">
             <div class="btn-group pull-right">
@@ -27,7 +28,7 @@
                 {% for tag in question.taglist %}
                     <a href="{% url 'tag' tag.word %}">{{ tag.word }}</a>
                 {% endfor %}
-                <span class="pull-right">Asked by {{ question.author }}</span>
+                <span class="pull-right">Asked by <a href="#">{{ question.author }}</a></span>
             </div>
         </div>
     </div>
@@ -42,12 +43,12 @@
         <div class="row answ_margin__bottom">
             <div class="col-md-2 col-sm-3 hidden-xs">
                 <div class="row answ_padding__left">
-                    <img class="pull-right" src="http://lorempixel.com/83/83/">
+                    <img class="pull-right question_pic" src="/uploads/{{ a.userpic }}">
                 </div>
                 <div class="row answ_padding__left rating">
                     <div class="btn-group pull-right">
                       <button class="btn btn-danger btn-sm">-</button>
-                      <button class="btn btn-default btn-sm disabled">2</button>
+                      <button class="btn btn-default btn-sm disabled">{{ a.rating }}</button>
                       <button class="btn btn-success btn-sm">+</button>
                     </div>
                 </div>
@@ -73,6 +74,28 @@
             <h2>No answers yet.</h2>
         </div>
     </div>
+{% endif %}
+{% if user.is_authenticated  %}
+    <h2>Answer: </h2>
+<form method="post" class="form-horizontal" role="form">
+  {% csrf_token %}
+  <div class="form-group">
+	  <div class="col-sm-12">
+      {% render_field form.text class="non-resizable form-control" placeholder="" %}
+      {% for error in form.text.errors %}
+      <span class="label label-danger">{{ error }}</span>
+      {% endfor %}
+	  </div>
+  </div>
+	<input type="hidden" name="qid" value="{{ question.id }}" />
+  <div class="form-group">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-primary">Ответить</button>
+    </div>
+  </div>
+</form>
+{% else %}
+Please <a href="/login/?next={{ request.path }}">log in</a> or <a href="/signup/">sign up</a> to add an answer.
 {% endif %}
 
 {% endblock %}

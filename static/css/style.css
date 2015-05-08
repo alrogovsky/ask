@@ -150,7 +150,7 @@ h3 {
 }
 
 #user{
-    margin-left: 5px;
+    margin-left: 7px;
 }
 
 .non-resizable {
@@ -165,4 +165,9 @@ h3 {
 .userpic{
     width: 30px;
     height: 30px;
+}
+
+.question_pic{
+    width: 83px;
+    height: 83px;
 }

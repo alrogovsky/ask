@@ -6,7 +6,7 @@ from django.contrib import auth
 from ask.models import Profile, Question, Answer, Tag, Rate
 from django.core.paginator import Paginator
 from django.http import Http404
-from ask_rogovsky2.forms import SignUp, EditProfile
+from ask_rogovsky2.forms import SignUp, EditProfile, Ask, AnswerForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import os
@@ -95,6 +95,10 @@ def questions(request, order = ''):
     paginator = makePages(pageNumber, questions)
     page_questions = getQuestionParams(paginator['page'].object_list)
 
+    for q in page_questions:
+        q.userpic = Profile.objects.get(user = q.author).avatar_url
+        print q.userpic
+
     if request.user.is_authenticated():
         userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
 
@@ -128,6 +132,10 @@ def bytag(request, tag=''):
     paginator = makePages(pageNumber, questions)
 
     questions = getQuestionParams(paginator['page'].object_list)
+
+    for q in questions:
+        q.userpic = Profile.objects.get(user = q.author).avatar_url
+        print q.userpic
 
     if request.user.is_authenticated():
         userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
@@ -183,6 +191,7 @@ def profile_edit(request):
 
 def question(request, id=0):
     userpic = 0
+    form = AnswerForm()
     if request.user.is_authenticated():
         userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
     q_id = int(id)
@@ -190,21 +199,60 @@ def question(request, id=0):
         question = Question.objects.get(id=q_id)
     except Question.DoesNotExist:
         raise Http404
+
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            a = form.save(commit=False)
+            a.question = question
+            a.author = request.user
+            a.save()
+            return HttpResponseRedirect('/question/' + str(q_id))
+
     question.taglist = question.tags.all()
+    question.userpic = Profile.objects.get(user = question.author).avatar_url
     answers = Answer.objects.filter(question_id=q_id).order_by('date_added')
+
+    for an in answers:
+        an.userpic = Profile.objects.get(user=an.author).avatar_url
+
     return render(request, 'question.html', {
         'question': question,
         'best_tags': getBestTags(),
         'answers': answers,
         'userpic': userpic,
+        'form': form
     })
 
 
+@login_required(login_url='/login/')
 def ask(request):
     userpic = 0
     if request.user.is_authenticated():
         userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
-    return render(request, 'ask.html',{'best_tags': getBestTags(), 'userpic': userpic})
+
+    if request.method == 'POST':
+        form = Ask(request.POST)
+        if form.is_valid():
+            question = Question.objects.create(
+                title=form.cleaned_data['title'],
+                text=form.cleaned_data['text'],
+                rating=0,
+                author=request.user
+            )
+            tag_list = form.cleaned_data['tags'].split(",")
+            for x in tag_list[:3]:
+                if x != "":
+                    try:
+                        tag = Tag.objects.get(word = x.strip())
+                    except Tag.DoesNotExist:
+                        tag = Tag.objects.create(word = x.strip())
+                question.tags.add(tag)
+            question.save()
+            return HttpResponseRedirect("/question/" + str(question.id))
+    else:
+        form = Ask()
+    return render(request, 'ask.html',{'best_tags': getBestTags(), 'userpic': userpic, 'form': form})
 
 
 ########### helpers #############
@@ -221,10 +269,13 @@ def getBestTags():
     colors = {1:'label-primary', 2:'label-success', 3:'label-info', 4:'label-warning', 5:'label-danger'}
     for t in tags:
         t.quantity = t.question_set.all().count()
-        t.color = colors[i]
-        i += 1
     tags = sorted(tags, key=lambda x: x.quantity, reverse=True)
-    return tags[:5]
+    tags = tags[:5]
+
+    for t in tags:
+        t.color = colors[i]
+        i+=1
+    return tags
 
 
 def makePages(pageNumber, questions):
