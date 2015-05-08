@@ -242,12 +242,12 @@ def ask(request):
             )
             tag_list = form.cleaned_data['tags'].split(",")
             for x in tag_list[:3]:
-                if x != "":
+                if x.strip() != "":
                     try:
                         tag = Tag.objects.get(word = x.strip())
                     except Tag.DoesNotExist:
                         tag = Tag.objects.create(word = x.strip())
-                question.tags.add(tag)
+                    question.tags.add(tag)
             question.save()
             return HttpResponseRedirect("/question/" + str(question.id))
     else:
