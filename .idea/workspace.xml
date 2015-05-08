@@ -60,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/templates/ask.html">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.21818182" vertical-offset="0" max-vertical-offset="915">
-              <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
+              <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -649,7 +649,13 @@
       <option name="project" value="LOCAL" />
       <updated>1431086796950</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fixik">
+      <created>1431087186498</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1431087186498</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -697,11 +703,11 @@
     <MESSAGE value="tags update" />
     <MESSAGE value="display update" />
     <MESSAGE value="dz3 finished" />
-    <MESSAGE value="fixik" />
     <MESSAGE value="fixik #2" />
     <MESSAGE value="fixik #3" />
     <MESSAGE value="+ questions and answers" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ questions and answers" />
+    <MESSAGE value="fixik" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixik" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1130,7 +1136,7 @@
     <entry file="file://$PROJECT_DIR$/templates/ask.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21818182" vertical-offset="0" max-vertical-offset="915">
-          <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
+          <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
           <folding />
         </state>
       </provider>
