@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^question/(\d+)$', 'ask_rogovsky2.views.question', name='question'),
     url(r'^ask/$','ask_rogovsky2.views.ask', name='ask'),
     url(r'^tag/(.+)$', 'ask_rogovsky2.views.bytag', name='tag'),
-    url(r'^profile/edit/$', 'ask_rogovsky2.views.profile_edit', name='p_edit')
+    url(r'^profile/edit/$', 'ask_rogovsky2.views.profile_edit', name='p_edit'),
+    url(r'^rate/$', 'ask_rogovsky2.views.rate', name='rate'),
 ]

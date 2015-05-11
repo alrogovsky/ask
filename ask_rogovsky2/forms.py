@@ -59,6 +59,13 @@ class Ask(ModelForm):
         model = Question
         fields = ['title', 'text']
 
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if title.strip() == "":
+            raise forms.ValidationError('Title can not be empty!')
+        else:
+            return title
+
 
 class AnswerForm(ModelForm):
     class Meta:

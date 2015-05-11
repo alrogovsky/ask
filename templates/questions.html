@@ -25,9 +25,9 @@
   		</div>
   		<div class="row text-center rating">
   			<div class="btn-group">
-          <button class="btn btn-danger btn-sm">-</button>
-			    <button class="btn btn-default btn-sm disabled">{{ i.rating }}</button>
-          <button class="btn btn-success btn-sm">+</button>
+          <button class="btn btn-danger btn-sm q_dislike" qid="{{ i.id }}">-</button>
+			    <button class="btn btn-default btn-sm" disabled>{{ i.rating }}</button>
+          <button class="btn btn-success btn-sm q_like" qid="{{ i.id }}">+</button>
 			</div>
   		</div>
   	</div>
@@ -39,13 +39,13 @@
 	  	</div>
         <div class="fuck"></div>
 	  	<div class="row question__footer">
-        <span class="hidden-lg bottomleft"><a href="{% url 'question' i.id %}">answer ({{ i.answers }})</a></span>
+        <span class="hidden-lg bottomleft"><a href="{% url 'question' i.id %}#answerbox">answer ({{ i.answers }})</a></span>
         <span class="hidden-lg bottomright">tags:
             {% for t in i.taglist %}
             <a href="{% url 'tag' t.word %}">{{ t.word }}</a>
             {% endfor %}
         </span>
-        <span class="visible-lg hidden-xs bottomleft"><a href="{% url 'question' i.id %}"> answer ({{ i.answers }})</a></span>
+        <span class="visible-lg hidden-xs bottomleft"><a href="{% url 'question' i.id %}#answerbox"> answer ({{ i.answers }})</a></span>
         <span class="visible-lg hidden-xs bottomright">tags:
             {% for t in i.taglist %}
             <a href="{% url 'tag' t.word %}">{{ t.word }}</a>
@@ -60,7 +60,7 @@
         </div>
         <div class="fuck"></div>
         <div class="row question__footer">
-            <span class="hidden-lg bottomleft"><a href="{% url 'question' i.id %}">answer ({{ i.answers }})</a></span>
+            <span class="hidden-lg bottomleft"><a href="{% url 'question' i.id %}#answerbox">answer ({{ i.answers }})</a></span>
             <span class="hidden-lg bottomright">tags:
                 {% for t in i.taglist %}
               <a href="{% url 'tag' t.word %}">{{ t.word }}</a>

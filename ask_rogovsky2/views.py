@@ -3,14 +3,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib import auth
-from ask.models import Profile, Question, Answer, Tag, Rate
+from ask.models import Profile, Question, Answer, Tag, Rate, Rate_Answer
 from django.core.paginator import Paginator
 from django.http import Http404
 from ask_rogovsky2.forms import SignUp, EditProfile, Ask, AnswerForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import os
-
+import json as simplejson
+from django.db.models import F
 
 
 @csrf_exempt
@@ -28,16 +29,7 @@ def helloworld(request):
             output += request.POST[x] + ' '
     html = "<html><body>%s</body></html>" % output
 
-    if int(request.GET.get('persist')) == 1:
-        u = User.objects.get(pk = 1)
-        t = Tag.objects.all()
-        for x in range (1, 100):
-            q = Question(author = u, title = 'GENERATED FOR TESTS', text = 'THIS IS GENERATED QUESTION!', date_added = "NOW()", rating = 0)
-            q.save()
-            q.tags.add(t[0])
-            q.tags.add(t[1])
-            q.tags.add(t[2])
-
+    Answer.objects.filter(id=request.POST['id']).update(rating = F('rating') + 1)
     return HttpResponse(html)
 
 
@@ -97,7 +89,6 @@ def questions(request, order = ''):
 
     for q in page_questions:
         q.userpic = Profile.objects.get(user = q.author).avatar_url
-        print q.userpic
 
     if request.user.is_authenticated():
         userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
@@ -203,6 +194,8 @@ def question(request, id=0):
     except Question.DoesNotExist:
         raise Http404
 
+    answers = Answer.objects.filter(question_id=q_id).order_by('date_added')
+
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
@@ -210,11 +203,11 @@ def question(request, id=0):
             a.question = question
             a.author = request.user
             a.save()
-            return HttpResponseRedirect('/question/' + str(q_id))
+            return HttpResponseRedirect('/question/' + str(q_id) + '#answer' + str(answers.count()) )
 
     question.taglist = question.tags.all()
     question.userpic = Profile.objects.get(user = question.author).avatar_url
-    answers = Answer.objects.filter(question_id=q_id).order_by('date_added')
+
 
     for an in answers:
         an.userpic = Profile.objects.get(user=an.author).avatar_url
@@ -256,6 +249,57 @@ def ask(request):
     else:
         form = Ask()
     return render(request, 'ask.html',{'best_tags': getBestTags(), 'userpic': userpic, 'form': form})
+
+@csrf_exempt
+def rate(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST' and 'action' in request.POST and 'id' in request.POST and 'type' in request.POST:
+            if request.POST['type'] == 'answer':
+                try:
+                    Rate_Answer.objects.get(answer_id = request.POST['id'], user_id = request.user.id)
+                    response = {
+                        'result': 'exists',
+                    }
+                    jsondata = simplejson.dumps(response)
+                    return HttpResponse(jsondata,content_type='application/json')
+                except Rate_Answer.DoesNotExist:
+                    print request.POST['id']
+                    if request.POST['action'] == 'like':
+                        Answer.objects.filter(id=request.POST['id']).update(rating = F('rating') + 1)
+                    if request.POST['action'] == 'dislike':
+                        Answer.objects.filter(id=request.POST['id']).update(rating = F('rating') - 1)
+                    Rate_Answer.objects.create(answer_id = request.POST['id'], user_id = request.user.id)
+                    response = {
+                        'result': 'done',
+                        'new': Answer.objects.get(id=request.POST['id']).rating
+                    }
+                    jsondata = simplejson.dumps(response)
+                    return HttpResponse(jsondata,content_type='application/json')
+            if request.POST['type'] == 'question':
+                try:
+                    Rate.objects.get(question_id = request.POST['id'], user_id = request.user.id)
+                    response = {
+                        'result': 'exists',
+                    }
+                    jsondata = simplejson.dumps(response)
+                    return HttpResponse(jsondata,content_type='application/json')
+                except Rate.DoesNotExist:
+                    print request.POST['id']
+                    if request.POST['action'] == 'like':
+                        Question.objects.filter(id=request.POST['id']).update(rating = F('rating') + 1)
+                    if request.POST['action'] == 'dislike':
+                        Question.objects.filter(id=request.POST['id']).update(rating = F('rating') - 1)
+                    Rate.objects.create(question_id = request.POST['id'], user_id = request.user.id)
+                    response = {
+                        'result': 'done',
+                        'new': Question.objects.get(id=request.POST['id']).rating
+                    }
+                    jsondata = simplejson.dumps(response)
+                    return HttpResponse(jsondata,content_type='application/json')
+        else:
+            raise Http404
+    else:
+        return HttpResponseRedirect("/login/")
 
 
 ########### helpers #############

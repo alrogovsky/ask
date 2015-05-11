@@ -9,9 +9,9 @@
         </div>
         <div class="row rating">
             <div class="btn-group pull-right">
-              <button class="btn btn-danger btn-sm">-</button>
-              <button class="btn btn-default btn-sm disabled">{{ question.rating }}</button>
-              <button class="btn btn-success btn-sm">+</button>
+              <button class="btn btn-danger btn-sm q_dislike" qid="{{ question.id }}">-</button>
+              <button class="btn btn-default btn-sm" disabled>{{ question.rating }}</button>
+              <button class="btn btn-success btn-sm q_like" qid="{{ question.id }}">+</button>
             </div>
         </div>
     </div>
@@ -41,15 +41,16 @@
         {% for a in answers %}
         <!-- START ANSWER -->
         <div class="row answ_margin__bottom">
+            <a name="answer{{ forloop.counter }}"></a>
             <div class="col-md-2 col-sm-3 hidden-xs">
                 <div class="row answ_padding__left">
                     <img class="pull-right question_pic" src="/uploads/{{ a.userpic }}">
                 </div>
                 <div class="row answ_padding__left rating">
                     <div class="btn-group pull-right">
-                      <button class="btn btn-danger btn-sm">-</button>
-                      <button class="btn btn-default btn-sm disabled">{{ a.rating }}</button>
-                      <button class="btn btn-success btn-sm">+</button>
+                      <button class="btn btn-danger btn-sm a_dislike" aid="{{ a.id }}">-</button>
+                      <button class="btn btn-default btn-sm" disabled>{{ a.rating }}</button>
+                      <button class="btn btn-success btn-sm a_like" aid="{{ a.id }}">+</button>
                     </div>
                 </div>
             </div>
@@ -81,6 +82,7 @@
   {% csrf_token %}
   <div class="form-group">
 	  <div class="col-sm-12">
+      <a name="answerbox"></a>
       {% render_field form.text class="non-resizable form-control" placeholder="" %}
       {% for error in form.text.errors %}
       <span class="label label-danger">{{ error }}</span>
