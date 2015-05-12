@@ -28,6 +28,7 @@ class Question(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag)
     rating = models.IntegerField(default=0)
+    deleted = models.BooleanField(default = False)
 
 
 class Answer(models.Model):
