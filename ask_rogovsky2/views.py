@@ -368,7 +368,7 @@ def profile(request, name):
         user.rating = profile.rating
         user.profid = profile.id
     except User.DoesNotExist:
-        user = 0
+        raise Http404
     return render(request, 'profile.html', {'best':getBest(), 'userpic':userpic, 'profile':user})
 
 
