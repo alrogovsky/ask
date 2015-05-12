@@ -42,6 +42,9 @@ $(document).ready(function() {
             if (data.result == 'done') {
                 $(self).parent().find("button:disabled").text(data.new);
             }
+            if(data.result == 'login') {
+                alert("Необходимо войти, чтобы голосовать!")
+            }
         });
     });
 });
@@ -59,6 +62,9 @@ $(document).ready(function() {
             }
             if (data.result == 'done') {
                 $(self).parent().find("button:disabled").text(data.new);
+            }
+            if(data.result == 'login') {
+                alert("Необходимо войти, чтобы голосовать!")
             }
         });
     });
@@ -78,6 +84,9 @@ $(document).ready(function() {
             if (data.result == 'done') {
                 $(self).parent().find("button:disabled").text(data.new);
             }
+            if(data.result == 'login') {
+                alert("Необходимо войти, чтобы голосовать!")
+            }
         });
     });
 
@@ -94,6 +103,10 @@ $(document).ready(function() {
             if (data.result == 'done') {
                 $(self).parent().find("button:disabled").text(data.new);
             }
+            if(data.result == 'login') {
+                alert("Необходимо войти, чтобы голосовать!")
+            }
+
         });
     });
 });

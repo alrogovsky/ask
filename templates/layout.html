@@ -71,7 +71,7 @@
       <h2>Popular tags</h2>
       <div class="best">
         <h3>
-            {% for t in best_tags %}
+            {% for t in best.tags %}
           <a href="{% url 'tag' t.word %}" class="taglink"><span class="label {{ t.color }}">{{ t.word }}</span></a>
             {% endfor %}
         </h3>
@@ -79,10 +79,9 @@
         <h2>Best members</h2>
         <div class="best">
           <ul class="list-unstyled">
-            <li><a href="#">Vasya</a></li>
-            <li><a href="#">Vova</a></li>
-            <li><a href="#">Petya</a></li>
-            <li><a href="#">admin</a></li>
+              {% for u in best.best_users %}
+            <li><a href="#">{{ u.username }}</a>
+              {% endfor %}
           </ul>
         </div>
     </div>

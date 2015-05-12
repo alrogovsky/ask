@@ -50,13 +50,13 @@ def login(request):
             return HttpResponseRedirect(redirect)
         else:
             return render(request, 'login.html', {
-                'best_tags': getBestTags(),
+                'best': getBest(),
                 'username': username,
                 'password': password,
                 'error': 1,
                 'redirect': redirect
             })
-    return render(request, 'login.html', {'best_tags': getBestTags(), 'redirect': redirect,})
+    return render(request, 'login.html', {'best': getBest(), 'redirect': redirect,})
 
 
 def logout_view(request):
@@ -95,7 +95,7 @@ def questions(request, order = ''):
 
     return render(request, 'questions.html',{
         'questions': page_questions,
-        'best_tags': getBestTags(),
+        'best': getBest(),
         'order':order,
         'pagesRange': paginator['pagesRange'],
         'lastPage': paginator['lastPage'],
@@ -133,7 +133,7 @@ def bytag(request, tag=''):
 
     return render(request, 'questions.html', {
         'questions': questions,
-        'best_tags': getBestTags(),
+        'best': getBest(),
         'tag': tag,
         'pagesRange': paginator['pagesRange'],
         'lastPage': paginator['lastPage'],
@@ -157,7 +157,7 @@ def signup(request):
             return HttpResponseRedirect("/")
     else:
         form = SignUp()
-    return render(request, 'signup.html', {'best_tags': getBestTags(), 'form':form, })
+    return render(request, 'signup.html', {'best': getBest(), 'form':form, })
 
 
 @login_required(login_url='/login/')
@@ -178,9 +178,9 @@ def profile_edit(request):
                 prof.avatar_url = request.FILES['avatar']
                 prof.save()
             ava = Profile.objects.get(user=int(request.user.id)).avatar_url
-        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'success': 1, 'userpic': userpic})
+        return render(request, 'edit.html', {'best':getBest(), 'form':form, 'ava': ava, 'success': 1, 'userpic': userpic})
     else:
-        return render(request, 'edit.html', {'best_tags':getBestTags(), 'form':form, 'ava': ava, 'userpic': userpic})
+        return render(request, 'edit.html', {'best':getBest(), 'form':form, 'ava': ava, 'userpic': userpic})
 
 
 def question(request, id=0):
@@ -214,7 +214,7 @@ def question(request, id=0):
 
     return render(request, 'question.html', {
         'question': question,
-        'best_tags': getBestTags(),
+        'best': getBest(),
         'answers': answers,
         'userpic': userpic,
         'form': form
@@ -248,11 +248,11 @@ def ask(request):
             return HttpResponseRedirect("/question/" + str(question.id))
     else:
         form = Ask()
-    return render(request, 'ask.html',{'best_tags': getBestTags(), 'userpic': userpic, 'form': form})
+    return render(request, 'ask.html',{'best': getBest(), 'userpic': userpic, 'form': form})
 
-@csrf_exempt
+
 def rate(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         if request.method == 'POST' and 'action' in request.POST and 'id' in request.POST and 'type' in request.POST:
             if request.POST['type'] == 'answer':
                 try:
@@ -299,8 +299,11 @@ def rate(request):
         else:
             raise Http404
     else:
-        return HttpResponseRedirect("/login/")
-
+        response = {
+                        'result': 'login',
+                    }
+        jsondata = simplejson.dumps(response)
+        return HttpResponse(jsondata,content_type='application/json')
 
 ########### helpers #############
 def getQuestionParams(questions):
@@ -310,7 +313,7 @@ def getQuestionParams(questions):
     return questions
 
 
-def getBestTags():
+def getBest():
     tags = Tag.objects.all()
     i=1
     colors = {1:'label-primary', 2:'label-success', 3:'label-info', 4:'label-warning', 5:'label-danger'}
@@ -322,7 +325,12 @@ def getBestTags():
     for t in tags:
         t.color = colors[i]
         i+=1
-    return tags
+
+    best_users = Profile.objects.order_by('-rating')[:5]
+    for u in best_users:
+        u.username = u.user.username
+    return {'tags': tags, 'best_users': best_users}
+    
 
 
 def makePages(pageNumber, questions):
