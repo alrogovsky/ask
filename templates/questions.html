@@ -16,6 +16,7 @@
             </div>
         </div>
     {% endif %}
+    {%  if questions  %}
 {% for i in questions %}
 <div class="row">
   <div class="panel panel-default panel-body question">
@@ -77,7 +78,10 @@
   </div>
 </div>
 {% endfor %}
-
-{% include "paginator.html" %}
-
+    {% include "paginator.html" %}
+{% else %}
+<div class="row">
+   <h2 class="h2__tag text-center">No questions found</h2>
+</div>
+{% endif %}
 {% endblock %}

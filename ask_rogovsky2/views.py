@@ -106,30 +106,37 @@ def questions(request, order = ''):
 
 def bytag(request, tag=''):
     userpic = 0
-    t = Tag.objects.get(word=tag)
-    questions = t.question_set.all().order_by('-date_added')
-
-    pageNumber = 0
-
-    if request.GET.get('p'):
-        try:
-            pageNumber = int(request.GET.get('p'))
-        except ValueError:
-            raise Http404
-
-    if pageNumber < 1:
-        pageNumber = 1
-
-    paginator = makePages(pageNumber, questions)
-
-    questions = getQuestionParams(paginator['page'].object_list)
-
-    for q in questions:
-        q.userpic = Profile.objects.get(user = q.author).avatar_url
-        print q.userpic
-
     if request.user.is_authenticated():
         userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
+    try:
+        t = Tag.objects.get(word=tag)
+        questions = t.question_set.filter(deleted=0).order_by('-date_added')
+
+        pageNumber = 0
+
+        if request.GET.get('p'):
+            try:
+                pageNumber = int(request.GET.get('p'))
+            except ValueError:
+                raise Http404
+
+        if pageNumber < 1:
+            pageNumber = 1
+
+        paginator = makePages(pageNumber, questions)
+
+        questions = getQuestionParams(paginator['page'].object_list)
+
+        for q in questions:
+            q.userpic = Profile.objects.get(user = q.author).avatar_url
+            print q.userpic
+
+    except Tag.DoesNotExist:
+        questions = 0
+        paginator = {}
+        paginator['pagesRange'] = 0
+        paginator['lastPage'] = 0
+        pageNumber = 0
 
     return render(request, 'questions.html', {
         'questions': questions,
