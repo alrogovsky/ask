@@ -69,9 +69,9 @@ def questions(request, order = ''):
     if order != 'best':
         order = 'new'
     if order == 'best':
-        questions = Question.objects.all().order_by('-rating')
+        questions = Question.objects.filter(deleted = 0).order_by('-rating')
     else:
-        questions = Question.objects.order_by('-date_added')
+        questions = Question.objects.filter(deleted = 0).order_by('-date_added')
 
     pageNumber = 0
 
@@ -192,6 +192,8 @@ def question(request, id=0):
     try:
         question = Question.objects.get(id=q_id)
     except Question.DoesNotExist:
+        raise Http404
+    if question.deleted == 1:
         raise Http404
 
     answers = Answer.objects.filter(question_id=q_id).order_by('-is_right')
