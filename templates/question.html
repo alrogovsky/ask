@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-md-2 col-sm-3 hidden-xs">
         <div class="row">
-            <img class="pull-right question_pic" src="/uploads/{{ question.userpic }}">
+            <a href="{% url 'profile' question.author.username %}"><img class="pull-right question_pic" src="/uploads/{{ question.userpic }}"></a>
         </div>
         <div class="row rating">
             <div class="btn-group pull-right">
@@ -28,7 +28,7 @@
                 {% for tag in question.taglist %}
                     <a href="{% url 'tag' tag.word %}">{{ tag.word }}</a>
                 {% endfor %}
-                <span class="pull-right">Asked by <a href="#">{{ question.author }}</a></span>
+                <span class="pull-right">Asked by <a href="{% url 'profile' question.author.username %}">{{ question.author }}</a></span>
             </div>
         </div>
     </div>
@@ -44,7 +44,7 @@
             <a name="answer{{ forloop.counter }}"></a>
             <div class="col-md-2 col-sm-3 hidden-xs">
                 <div class="row answ_padding__left">
-                    <img class="pull-right question_pic" src="/uploads/{{ a.userpic }}">
+                    <a href="{% url 'profile' a.author.username %}"><img class="pull-right question_pic" src="/uploads/{{ a.userpic }}"></a>
                 </div>
                 <div class="row answ_padding__left rating">
                     <div class="btn-group pull-right">

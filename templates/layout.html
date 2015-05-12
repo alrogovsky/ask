@@ -80,7 +80,7 @@
         <div class="best">
           <ul class="list-unstyled">
               {% for u in best.best_users %}
-            <li><a href="#">{{ u.username }}</a>
+            <li><a href="{% url 'profile' u.username %}">{{ u.username }}</a>
               {% endfor %}
           </ul>
         </div>

@@ -21,13 +21,13 @@
   <div class="panel panel-default panel-body question">
   	<div class="question__left col-md-2 col-sm-3 hidden-xs">
   		<div class="row">
-  			<img class="center-block question_pic" src="/uploads/{{ i.userpic }}">
+  			<a href="{% url 'profile' i.author.username %}"><img class="center-block question_pic" src="/uploads/{{ i.userpic }}"></a>
   		</div>
   		<div class="row text-center rating">
   			<div class="btn-group">
-          <button class="btn btn-danger btn-sm q_dislike" qid="{{ i.id }}">-</button>
+                <button class="btn btn-danger btn-sm q_dislike" qid="{{ i.id }}">-</button>
 			    <button class="btn btn-default btn-sm" disabled>{{ i.rating }}</button>
-          <button class="btn btn-success btn-sm q_like" qid="{{ i.id }}">+</button>
+                <button class="btn btn-success btn-sm q_like" qid="{{ i.id }}">+</button>
 			</div>
   		</div>
   	</div>

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib import auth
-from ask.models import Profile, Question, Answer, Tag, Rate, Rate_Answer
+from ask.models import Profile, Question, Answer, Tag, Rate, Rate_Answer, Rate_Profile
 from django.core.paginator import Paginator
 from django.http import Http404
 from ask_rogovsky2.forms import SignUp, EditProfile, Ask, AnswerForm
@@ -253,7 +253,7 @@ def ask(request):
         form = Ask()
     return render(request, 'ask.html',{'best': getBest(), 'userpic': userpic, 'form': form})
 
-
+@csrf_exempt
 def rate(request):
     if request.user.is_authenticated():
         if request.method == 'POST' and 'action' in request.POST and 'id' in request.POST and 'type' in request.POST:
@@ -266,7 +266,6 @@ def rate(request):
                     jsondata = simplejson.dumps(response)
                     return HttpResponse(jsondata,content_type='application/json')
                 except Rate_Answer.DoesNotExist:
-                    print request.POST['id']
                     if request.POST['action'] == 'like':
                         Answer.objects.filter(id=request.POST['id']).update(rating = F('rating') + 1)
                     if request.POST['action'] == 'dislike':
@@ -287,7 +286,6 @@ def rate(request):
                     jsondata = simplejson.dumps(response)
                     return HttpResponse(jsondata,content_type='application/json')
                 except Rate.DoesNotExist:
-                    print request.POST['id']
                     if request.POST['action'] == 'like':
                         Question.objects.filter(id=request.POST['id']).update(rating = F('rating') + 1)
                     if request.POST['action'] == 'dislike':
@@ -296,6 +294,34 @@ def rate(request):
                     response = {
                         'result': 'done',
                         'new': Question.objects.get(id=request.POST['id']).rating
+                    }
+                    jsondata = simplejson.dumps(response)
+                    return HttpResponse(jsondata,content_type='application/json')
+            if request.POST['type'] == 'profile':
+                try:
+                    Rate_Profile.objects.get(profile_id = request.POST['id'], user_id = request.user.id)
+                    response = {
+                        'result': 'exists',
+                    }
+                    jsondata = simplejson.dumps(response)
+                    return HttpResponse(jsondata,content_type='application/json')
+                except Rate_Profile.DoesNotExist:
+                    print request.POST['id']
+                    print Profile.objects.get(user = request.user).id
+                    if int(request.POST['id']) == Profile.objects.get(user = request.user).id:
+                        response = {
+                            'result': 'selflike',
+                        }
+                        jsondata = simplejson.dumps(response)
+                        return HttpResponse(jsondata,content_type='application/json')
+                    if request.POST['action'] == 'like':
+                        Profile.objects.filter(id=request.POST['id']).update(rating = F('rating')+1)
+                    if request.POST['action'] == 'dislike':
+                        Profile.objects.filter(id=request.POST['id']).update(rating = F('rating')-1)
+                    Rate_Profile.objects.create(profile_id = request.POST['id'], user_id = request.user.id)
+                    response = {
+                        'result': 'done',
+                        'new': Profile.objects.get(id=request.POST['id']).rating
                     }
                     jsondata = simplejson.dumps(response)
                     return HttpResponse(jsondata,content_type='application/json')
@@ -329,6 +355,19 @@ def right(request):
 
 
 
+def profile(request, name):
+    userpic = 0
+    if request.user.is_authenticated():
+        userpic = Profile.objects.get(user=int(request.user.id)).avatar_url
+    try:
+        user = User.objects.get(username = name)
+        profile = Profile.objects.get(user=user)
+        user.avatar = profile.avatar_url
+        user.rating = profile.rating
+        user.profid = profile.id
+    except User.DoesNotExist:
+        user = 0
+    return render(request, 'profile.html', {'best':getBest(), 'userpic':userpic, 'profile':user})
 
 
 ########### helpers #############

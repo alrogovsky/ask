@@ -47,3 +47,8 @@ class Rate(models.Model):
 class Rate_Answer(models.Model):
     user = models.ForeignKey(User)
     answer = models.ForeignKey(Answer)
+
+
+class Rate_Profile(models.Model):
+    user = models.ForeignKey(User)
+    profile = models.ForeignKey(Profile)
