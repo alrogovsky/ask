@@ -110,3 +110,18 @@ $(document).ready(function() {
         });
     });
 });
+
+$(document).ready(function() {
+    $('.is_right').click(function () {
+        var self = this;
+        $.post("/right/", {
+            aid: $(self).attr('aid'),
+            qid: $(self).attr('qid')
+        }, function (data) {
+            if (data.result == 'success') {
+                $(self).addClass('disabled').text('Correct!');
+                $(".is_right").not(self).css("visibility", "hidden");
+            }
+        });
+    });
+});

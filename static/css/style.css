@@ -171,3 +171,7 @@ h3 {
     width: 83px;
     height: 83px;
 }
+
+.panel-heading{
+    overflow:hidden;
+}

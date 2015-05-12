@@ -58,6 +58,11 @@
                 <div class="panel answ_panel panel-default">
                     <div class="panel-heading">
                         <strong>{{ a.author }}</strong> <span class="text-muted">answered on {{ a.date_added }}</span>
+                        {% if question.author == request.user and right == 0 %}
+                        <button class="btn btn-success pull-right btn-sm is_right" qid="{{ question.id }}" aid="{{ a.id }}"><i class="glyphicon glyphicon-ok"></i></button>
+                        {% elif right == a.id %}
+                        <span class="label label-success pull-right">Correct! <i class="glyphicon glyphicon-ok"></i></span>
+                        {% endif %}
                     </div>
                     <div class="panel-body">
                         {{ a.text|linebreaksbr }}

@@ -194,7 +194,7 @@ def question(request, id=0):
     except Question.DoesNotExist:
         raise Http404
 
-    answers = Answer.objects.filter(question_id=q_id).order_by('date_added')
+    answers = Answer.objects.filter(question_id=q_id).order_by('-is_right')
 
     if request.method == 'POST':
         form = AnswerForm(request.POST)
@@ -208,16 +208,19 @@ def question(request, id=0):
     question.taglist = question.tags.all()
     question.userpic = Profile.objects.get(user = question.author).avatar_url
 
-
+    right = 0
     for an in answers:
         an.userpic = Profile.objects.get(user=an.author).avatar_url
+        if an.is_right == 1:
+            right = an.id
 
     return render(request, 'question.html', {
         'question': question,
         'best': getBest(),
         'answers': answers,
         'userpic': userpic,
-        'form': form
+        'form': form,
+        'right': right
     })
 
 
@@ -304,6 +307,29 @@ def rate(request):
                     }
         jsondata = simplejson.dumps(response)
         return HttpResponse(jsondata,content_type='application/json')
+
+
+def right(request):
+    if request.method == 'POST' and 'aid' in request.POST and 'qid' in request.POST:
+        answer = Answer.objects.get(id = request.POST['aid'])
+        question = Question.objects.get(id=request.POST['qid'])
+        if question.author == request.user:
+            answer.is_right = 1
+            answer.save()
+            response = {
+                'result': 'success',
+            }
+            jsondata = simplejson.dumps(response)
+            return HttpResponse(jsondata,content_type='application/json')
+    response = {
+         'result': 'error'
+    }
+    jsondata = simplejson.dumps(response)
+    return HttpResponse(jsondata,content_type='application/json')
+
+
+
+
 
 ########### helpers #############
 def getQuestionParams(questions):

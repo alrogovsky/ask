@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^tag/(.+)$', 'ask_rogovsky2.views.bytag', name='tag'),
     url(r'^profile/edit/$', 'ask_rogovsky2.views.profile_edit', name='p_edit'),
     url(r'^rate/$', 'ask_rogovsky2.views.rate', name='rate'),
+    url(r'^right/$', 'ask_rogovsky2.views.right', name='right')
 ]
